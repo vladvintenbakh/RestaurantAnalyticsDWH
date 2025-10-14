@@ -58,20 +58,20 @@ CREATE TABLE IF NOT EXISTS stg.srv_wf_settings (
 	CONSTRAINT srv_wf_settings_workflow_key_key UNIQUE (workflow_key)
 );
 
-CREATE TABLE IF NOT EXISTS stg.couriersystem_couriers (
+CREATE TABLE IF NOT EXISTS stg.deliverysystem_couriers (
 	id serial4 NOT NULL,
 	object_id varchar NOT NULL,
 	object_value text NOT NULL,
 	update_ts timestamp NOT NULL,
-	CONSTRAINT couriersystem_couriers_object_id_uindex UNIQUE (object_id),
-	CONSTRAINT couriersystem_couriers_pkey PRIMARY KEY (id)
+	CONSTRAINT deliverysystem_couriers_object_id_uindex UNIQUE (object_id),
+	CONSTRAINT deliverysystem_couriers_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS stg.couriersystem_deliveries (
+CREATE TABLE IF NOT EXISTS stg.deliverysystem_deliveries (
 	id serial4 NOT NULL,
 	object_id varchar NOT NULL,
 	object_value text NOT NULL,
 	update_ts timestamp NOT NULL,
-	CONSTRAINT couriersystem_deliveries_object_id_uindex UNIQUE (object_id),
-	CONSTRAINT couriersystem_deliveries_pkey PRIMARY KEY (id)
+	CONSTRAINT deliverysystem_deliveries_object_id_uindex UNIQUE (object_id),
+	CONSTRAINT deliverysystem_deliveries_pkey PRIMARY KEY (id)
 );
