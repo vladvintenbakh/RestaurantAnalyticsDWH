@@ -1,5 +1,7 @@
 import logging
 import requests
+from datetime import datetime, timedelta
+import json
 
 import pendulum
 from airflow.decorators import dag, task
@@ -50,15 +52,12 @@ def delivery_api_to_stg_dag():
 
         log.info(f"{len(all_records)} records loaded")
         
-        # {'_id': 'zx8fw2jta6r9fhwln2a1tn2', 'name': 'Светлана Великая'}
-        
         if len(all_records) > 0:
             with dwh_hook.get_conn() as dwh_conn:
         
                 dwh_cursor = dwh_conn.cursor()
                 
                 for record in all_records:
-                    log.info(f"Loading record: {record}")
                     
                     dwh_cursor.execute(
                         f"""
@@ -73,8 +72,56 @@ def delivery_api_to_stg_dag():
                 
                 dwh_conn.commit()
                 dwh_cursor.close()
+                
+    @task()
+    def load_deliveries():
+        params = {
+            "sort_field": "date",
+            "sort_direction": "asc",
+            "limit": 50,
+            "offset": 0,
+            "from": (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d") + ' 00:00:00',
+            "to": datetime.now().strftime("%Y-%m-%d") + ' 00:00:00'
+        }
+        
+        with dwh_hook.get_conn() as dwh_conn:
+            
+            dwh_cursor = dwh_conn.cursor()
+            num_loaded = 0
+        
+            while True:
+                response = requests.get(api_endpoint + "/deliveries", headers=headers, params=params)
+                response.encoding = 'utf-8'
+                
+                response_json = response.json()
+                if len(response_json) == 0:
+                    break
+                
+                for delivery in response_json:
+                    dwh_cursor.execute(
+                        f"""
+                        INSERT INTO stg.deliverysystem_deliveries
+                        (object_id, object_value, update_ts)
+                        VALUES ('{delivery['delivery_id']}', '{json.dumps(delivery, ensure_ascii=False)}', '{delivery['delivery_ts']}')
+                        ON CONFLICT (object_id) DO UPDATE
+                        SET
+                            object_value = EXCLUDED.object_value,
+                            update_ts = EXCLUDED.update_ts
+                        """
+                    )
+                    
+                num_loaded += len(response_json)
+                params["offset"] += len(response_json)
+                
+                log.info(f"Records loaded so far: {num_loaded}")
+        
+            dwh_conn.commit()
+            dwh_cursor.close()
+            
+        log.info(f"A total of {num_loaded} records loaded")
     
     load_couriers()
+    load_deliveries()
 
 
 delivery_api_to_stg_dag = delivery_api_to_stg_dag()
