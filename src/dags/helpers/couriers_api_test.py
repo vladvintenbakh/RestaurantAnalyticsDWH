@@ -37,3 +37,4 @@ while True:
     time.sleep(1)
 
 print(f"{len(all_responses)} records loaded")
+print(all_responses)

@@ -59,11 +59,8 @@ CREATE TABLE IF NOT EXISTS stg.srv_wf_settings (
 );
 
 CREATE TABLE IF NOT EXISTS stg.deliverysystem_couriers (
-	id serial4 NOT NULL,
-	object_id varchar NOT NULL,
-	object_value text NOT NULL,
-	update_ts timestamp NOT NULL,
-	CONSTRAINT deliverysystem_couriers_object_id_uindex UNIQUE (object_id),
+	id text NOT NULL,
+	courier_name text NOT NULL,
 	CONSTRAINT deliverysystem_couriers_pkey PRIMARY KEY (id)
 );
 
