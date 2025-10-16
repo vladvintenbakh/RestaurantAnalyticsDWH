@@ -62,20 +62,20 @@ CREATE TABLE IF NOT EXISTS dds.dm_products (
 	CONSTRAINT dm_products_restaurant_id_fkey FOREIGN KEY (restaurant_id) REFERENCES dds.dm_restaurants(id)
 );
 
--- edit the orders dimension to include courier ID
-
 CREATE TABLE IF NOT EXISTS dds.dm_orders (
 	id serial4 NOT NULL,
 	user_id int4 NOT NULL,
 	restaurant_id int4 NOT NULL,
 	timestamp_id int4 NOT NULL,
+	courier_id int4 NOT NULL,
 	order_key varchar NOT NULL,
 	order_status varchar NOT NULL,
 	CONSTRAINT dm_orders_order_key_key UNIQUE (order_key),
 	CONSTRAINT dm_orders_pkey PRIMARY KEY (id),
 	CONSTRAINT dm_orders_fk_restaurant_id FOREIGN KEY (restaurant_id) REFERENCES dds.dm_restaurants(id),
 	CONSTRAINT dm_orders_fk_timestamp_id FOREIGN KEY (timestamp_id) REFERENCES dds.dm_timestamps(id),
-	CONSTRAINT dm_orders_fk_user_id FOREIGN KEY (user_id) REFERENCES dds.dm_users(id)
+	CONSTRAINT dm_orders_fk_user_id FOREIGN KEY (user_id) REFERENCES dds.dm_users(id),
+	CONSTRAINT dm_orders_fk_courier_id FOREIGN KEY (courier_id) REFERENCES dds.dm_couriers(id)
 );
 
 CREATE TABLE IF NOT EXISTS dds.fct_product_sales (
