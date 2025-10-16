@@ -17,7 +17,13 @@ CREATE TABLE IF NOT EXISTS dds.dm_users (
 	CONSTRAINT dm_users_unique_user_id UNIQUE (user_id)
 );
 
--- add a dimension for couriers
+CREATE TABLE IF NOT EXISTS dds.dm_couriers (
+	id serial4 NOT NULL,
+	courier_id varchar NOT NULL,
+	courier_name varchar NOT NULL,
+	CONSTRAINT dm_couriers_pkey PRIMARY KEY (id),
+	CONSTRAINT dm_couriers_unique_courier_id UNIQUE (courier_id)
+);
 
 CREATE TABLE IF NOT EXISTS dds.dm_restaurants (
 	id serial4 NOT NULL,
