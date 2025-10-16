@@ -32,6 +32,12 @@ def main_dag():
             postgres_conn_id="PG_WAREHOUSE_CONNECTION",
             sql=f"{BASE_SQL_PATH}/06_DML_dds_dm_timestamps.sql",
         )
+        
+        insert_into_dds_dm_couriers = PostgresOperator(
+            task_id="insert_into_dds_dm_couriers",
+            postgres_conn_id="PG_WAREHOUSE_CONNECTION",
+            sql=f"{BASE_SQL_PATH}/11_DML_dds_dm_couriers.sql",
+        )
 
     with TaskGroup("load_downstream_dims") as load_downstream_dims:
         
