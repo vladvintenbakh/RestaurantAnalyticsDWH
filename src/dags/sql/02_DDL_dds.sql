@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS dds.dm_users (
 	CONSTRAINT dm_users_unique_user_id UNIQUE (user_id)
 );
 
+-- add a dimension for couriers
+
 CREATE TABLE IF NOT EXISTS dds.dm_restaurants (
 	id serial4 NOT NULL,
 	restaurant_id varchar NOT NULL,
@@ -53,6 +55,8 @@ CREATE TABLE IF NOT EXISTS dds.dm_products (
 	CONSTRAINT dm_products_product_price_check CHECK (((product_price >= (0)::numeric) AND (product_price <= 999000000000.99))),
 	CONSTRAINT dm_products_restaurant_id_fkey FOREIGN KEY (restaurant_id) REFERENCES dds.dm_restaurants(id)
 );
+
+-- edit the orders dimension to include courier ID
 
 CREATE TABLE IF NOT EXISTS dds.dm_orders (
 	id serial4 NOT NULL,
