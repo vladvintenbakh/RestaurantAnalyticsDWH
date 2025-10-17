@@ -67,12 +67,20 @@ def main_dag():
             sql=f"{BASE_SQL_PATH}/12_DML_dds_fct_deliveries.sql",
         )
     
-    insert_into_cdm_dm_settlement_report = PostgresOperator(
-        task_id="insert_into_cdm_dm_settlement_report",
-        postgres_conn_id="PG_WAREHOUSE_CONNECTION",
-        sql=f"{BASE_SQL_PATH}/10_DML_cdm_dm_settlement_report.sql",
-    )
+    with TaskGroup("refresh_cdm_tables") as refresh_cdm_tables:
+        
+        insert_into_cdm_dm_settlement_report = PostgresOperator(
+            task_id="insert_into_cdm_dm_settlement_report",
+            postgres_conn_id="PG_WAREHOUSE_CONNECTION",
+            sql=f"{BASE_SQL_PATH}/10_DML_cdm_dm_settlement_report.sql",
+        )
+        
+        insert_into_cdm_dm_courier_ledger = PostgresOperator(
+            task_id="insert_into_cdm_dm_courier_ledger",
+            postgres_conn_id="PG_WAREHOUSE_CONNECTION",
+            sql=f"{BASE_SQL_PATH}/13_DML_cdm_dm_courier_ledger.sql",
+        )
     
-    load_upstream_dims >> load_downstream_dims >> update_fct_tables >> insert_into_cdm_dm_settlement_report
+    load_upstream_dims >> load_downstream_dims >> update_fct_tables >> refresh_cdm_tables
 
 main_dag = main_dag()
