@@ -97,3 +97,16 @@ CREATE TABLE IF NOT EXISTS dds.fct_product_sales (
 	CONSTRAINT fct_product_sales_fk_order_id FOREIGN KEY (order_id) REFERENCES dds.dm_orders(id),
 	CONSTRAINT fct_product_sales_fk_product_id FOREIGN KEY (product_id) REFERENCES dds.dm_products(id)
 );
+
+CREATE TABLE IF NOT EXISTS dds.fct_deliveries (
+	id serial4 NOT NULL,
+	order_id int4 NOT NULL,
+	courier_id int4 NOT NULL,
+	rate int2 DEFAULT 0 NOT NULL,
+	tip_sum numeric(14, 2) DEFAULT 0 NOT NULL,
+	CONSTRAINT fct_deliveries_rate_check CHECK ((rate >= 0) AND (rate <= 5)),
+	CONSTRAINT fct_deliveries_tip_sum_check CHECK (tip_sum >= 0),
+	CONSTRAINT fct_deliveries_pkey PRIMARY KEY (id),
+	CONSTRAINT fct_deliveries_fk_order_id FOREIGN KEY (order_id) REFERENCES dds.dm_orders(id),
+	CONSTRAINT fct_deliveries_fk_courier_id FOREIGN KEY (courier_id) REFERENCES dds.dm_couriers(id)
+);
