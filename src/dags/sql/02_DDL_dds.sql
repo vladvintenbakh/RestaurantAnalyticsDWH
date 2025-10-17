@@ -108,5 +108,6 @@ CREATE TABLE IF NOT EXISTS dds.fct_deliveries (
 	CONSTRAINT fct_deliveries_tip_sum_check CHECK (tip_sum >= 0),
 	CONSTRAINT fct_deliveries_pkey PRIMARY KEY (id),
 	CONSTRAINT fct_deliveries_fk_order_id FOREIGN KEY (order_id) REFERENCES dds.dm_orders(id),
-	CONSTRAINT fct_deliveries_fk_courier_id FOREIGN KEY (courier_id) REFERENCES dds.dm_couriers(id)
+	CONSTRAINT fct_deliveries_fk_courier_id FOREIGN KEY (courier_id) REFERENCES dds.dm_couriers(id),
+	CONSTRAINT unique_order_courier_pair UNIQUE (order_id, courier_id)
 );
