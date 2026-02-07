@@ -1,4 +1,4 @@
-# Delivery Service Pipeline
+# Restaurant Analytics DWH
 
 A compact data-warehouse project that ingests from multiple sources into **stg → dds → cdm** layers using **Apache Airflow** and **PostgreSQL**. A ready-to-run Docker Compose spins up the stack plus **Metabase** for BI.
 
